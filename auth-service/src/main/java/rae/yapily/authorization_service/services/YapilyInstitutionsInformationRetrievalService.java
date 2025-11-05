@@ -2,6 +2,8 @@ package rae.yapily.authorization_service.services;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -22,6 +24,11 @@ public class YapilyInstitutionsInformationRetrievalService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
+    @Retryable(
+            retryFor = {HttpClientErrorException.class},
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 2000)
+    )
     public String getInstitutions() {
 
         String url = yapilyApiUrl + "/institutions";

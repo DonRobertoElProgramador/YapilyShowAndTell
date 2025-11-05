@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class YapilyInstitutionsInformationPrinterService {
 
@@ -14,15 +17,18 @@ public class YapilyInstitutionsInformationPrinterService {
     public void receiveMessage(String message) {
         try {
             JsonNode json = objectMapper.readTree(message);
-            String institutionName = json
-                    .path("data")
-                    .get(0)
-                    .path("name")
-                    .asText("(unknown)");
+            JsonNode data = json.path("data");
+            List<String> names = new ArrayList<>();
 
-            System.out.println("✅ Institution: " + institutionName);
+            for (JsonNode institution : data) {
+                names.add(institution.path("name").asText("(unknown)"));
+            }
+
+            String institutionNames = String.join(", ", names);
+
+            System.out.println("Institution names: " + institutionNames);
         } catch (Exception ex) {
-            System.out.println("❌ Failed to parse message: " + ex.getMessage());
+            System.out.println("Failed whe retrieving institutions");
         }
     }
 }
