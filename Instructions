@@ -1,0 +1,12 @@
+To run the two services, just go to the root and run:
+sudo docker-compose up
+And to stop and remove the containers:
+sudo docker-compose down
+This will raise containers for the two services, RabbitMQ, Jaeger
+and OTLP (This two are still work in progress)
+Rabbit MQ url:
+http://localhost:15672
+Jaeger UI url:
+http://localhost:16686/search
+
+The services will only work from the docker-compose. To try to run them directly will give an error as some properties need to be set before

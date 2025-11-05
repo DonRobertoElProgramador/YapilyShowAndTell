@@ -1,0 +1,25 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: authorization-service
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: test
+    password: test
+    listener:
+      simple:
+        acknowledge-mode: auto
+yapily:
+  api-url: https://api.yapily.com/
+  queue: yapily-data
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  otlp:
+    tracing:
+      endpoint: otel-collector:4317
+      protocol: grpc

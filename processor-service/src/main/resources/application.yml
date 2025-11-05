@@ -1,0 +1,13 @@
+spring:
+  application:
+    name:processor-service
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: test
+    password: test
+    listener:
+      simple:
+        acknowledge-mode: auto
+yapily:
+  queue: yapily-data

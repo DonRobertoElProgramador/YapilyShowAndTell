@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: test
+      RABBITMQ_DEFAULT_PASS: test
+      
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: otel-collector
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel/config.yaml
+    command: ["--config=/etc/otel/config.yaml"]
+    
+  jaeger:
+    image: jaegertracing/all-in-one:1.51
+    container_name: jaeger
+    ports:
+      - "16686:16686"
+      - "14250:14250"
+    environment:
+      COLLECTOR_GRPC_SERVER_HOST_PORT: ":14250"
+
+  authorization-service:
+    build: ./auth-service
+    container_name: authorization-service
+    depends_on:
+      - rabbitmq
+    environment:
+      YAPILY_APP_ID: ${YAPILY_APP_ID}
+      YAPILY_APP_SECRET: ${YAPILY_APP_SECRET}
+    ports:
+      - "8090:8090"
+      
+  institution-service:
+    build: ./processor-service
+    container_name: processor-service
+    depends_on:
+      - rabbitmq
+      - authorization-service
+

@@ -1,0 +1,6 @@
+yapily:
+  api-url: "http://test-api"
+  queue: "test-queue"
+
+YAPILY_APP_ID: "test-id"
+YAPILY_APP_SECRET: "test-secret"
